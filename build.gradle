@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.3"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+mainClassName = "com.hashtagwebscale.status.ApplicationKt"
+
+dependencies {
+    repositories {
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.3'
+    compile 'com.sparkjava:spark-core:2.5.4'
+    compile 'com.github.jkcclemens:khttp:-SNAPSHOT'
+}
+
+task copyToLib(type: Copy) {
+    into "$buildDir/libs"
+    from(configurations.compile)
+}
+
+defaultTasks = ['clean']
+task stage(dependsOn: ['clean', 'build', 'copyToLib'])
+build.mustRunAfter clean

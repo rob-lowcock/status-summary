@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Status</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        .loader {
+            font-size: 10px;
+            margin: 10px auto;
+            text-indent: -9999em;
+            width: 94px;
+            height: 94px;
+            border-radius: 50%;
+            background: #c4c4c4;
+            background: -moz-linear-gradient(left, #c4c4c4 10%, rgba(196,196,196, 0) 42%);
+            background: -webkit-linear-gradient(left, #c4c4c4 10%, rgba(196,196,196, 0) 42%);
+            background: -o-linear-gradient(left, #c4c4c4 10%, rgba(196,196,196, 0) 42%);
+            background: -ms-linear-gradient(left, #c4c4c4 10%, rgba(196,196,196, 0) 42%);
+            background: linear-gradient(to right, #c4c4c4 10%, rgba(196,196,196, 0) 42%);
+            position: relative;
+            -webkit-animation: load3 1.4s infinite linear;
+            animation: load3 1.4s infinite linear;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        .loader:before {
+            width: 50%;
+            height: 50%;
+            background: #c4c4c4;
+            border-radius: 100% 0 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+        }
+        .loader:after {
+            background: #fcffff;
+            width: 75%;
+            height: 75%;
+            border-radius: 50%;
+            content: '';
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        @-webkit-keyframes load3 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes load3 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        a, a:hover, a:active, a:focus {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row mt-3">
+        <div class="col-sm-6">
+            <div class="stuart"><div class="loader"></div></div>
+            <div class="braintree"><div class="loader"></div></div>
+            <div class="pws"><div class="loader"></div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="papertrail"><div class="loader"></div></div>
+            <div class="redis"><div class="loader"></div></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function renderCard(name, status, message, url, container) {
+        var type = "card-success";
+        if (status === "error") {
+            type = "card-danger";
+        } else if (status === "warning") {
+            type = "card-warning";
+        }
+
+        container.html('<a href="' + url + '"><div class="card ' + type + ' card-inverse text-centre mb-3">' +
+            '<div class="card-block">' +
+                '<h4 class="card-title">' + name + '</h4>' +
+                '<p class="card-text">' + message + '</p>' +
+            '</div>' +
+        '</div></a>');
+    }
+
+    function callAPI(service, name) {
+        $.ajax({
+            url: '/api/' + service
+        }).done(function(data) {
+            renderCard(name, data.type, data.message, data.url, $('.' + service));
+        });
+    }
+
+    callAPI("stuart", "Stuart");
+    setInterval(callAPI, 60000, "stuart", "Stuart");
+
+    callAPI("braintree", "Braintree");
+    setInterval(callAPI, 60000, "braintree", "Braintree");
+
+    callAPI("pws", "PWS");
+    setInterval(callAPI, 60000, "pws", "PWS");
+
+    callAPI("papertrail", "Papertrail");
+    setInterval(callAPI, 60000, "papertrail", "Papertrail");
+
+    callAPI("redis", "Redis");
+    setInterval(callAPI, 60000, "redis", "Redis");
+</script>
+</body>
+</html>
